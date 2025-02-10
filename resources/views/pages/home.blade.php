@@ -18,38 +18,30 @@
         position: relative;
         width: 100%;
     }
-
-    /* Hide default range input */
     .range-slider input[type="range"] {
         -webkit-appearance: none;
         appearance: none;
         width: 100%;
         height: 6px;
         background: #007bff;
-        /* Full blue track */
         border-radius: 5px;
         outline: none;
         cursor: pointer;
         position: relative;
     }
 
-    /* Track for Webkit Browsers (Chrome, Safari) */
     .range-slider input[type="range"]::-webkit-slider-runnable-track {
         height: 6px;
         background: #007bff;
-        /* Full blue track */
         border-radius: 5px;
     }
 
-    /* Track for Firefox */
     .range-slider input[type="range"]::-moz-range-track {
         height: 6px;
         background: #007bff;
-        /* Full blue track */
         border-radius: 5px;
     }
 
-    /* 🎯 Properly Center the Handle (Thumb) */
     .range-slider input[type="range"]::-webkit-slider-thumb {
         -webkit-appearance: none;
         appearance: none;
@@ -60,7 +52,6 @@
         border-radius: 50%;
         cursor: pointer;
         margin-top: -6px;
-        /* ✅ Aligns the thumb with the track */
         position: relative;
         z-index: 2;
     }
@@ -74,7 +65,6 @@
         cursor: pointer;
         position: relative;
         margin-top: -6px;
-        /* ✅ Aligns the thumb with the track */
     }
 </style>
 
@@ -368,7 +358,7 @@
                         rating: selectedRating
                     },
                     success: function(response) {
-                        $('#product-list').empty(); // Clear current products
+                        $('#product-list').empty(); 
 
                         $.each(response.products, function(index, product) {
                             let productHTML = `
