@@ -14,7 +14,7 @@
 </head>
 
 <style>
-    .error{
+    .error {
         color: red;
     }
 </style>
@@ -60,39 +60,42 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($cart as $data)
-                    @php
-                        $total = 0;
-                        $itemtotal = $data->product->price * $data->quantity;
-                        $total += $itemtotal;
-                    @endphp
-                    <tr>
-                        <td>
-                            <img style="height: 50px;width:100px" src="{{ asset('images/' . $data->product->image) }}"
-                                class="card-img-top" alt="{{ $data->name }}">
-                            {{ $data->product->name }}
-                        </td>
-                        <td>
-                            <input type="number" class="form-control quantity-input"
-                                data-price="{{ $data->product->price }}" data-id="{{ $data->id }}"
-                                value="{{ $data->quantity }}" min="1">
-                        </td>
-                        <td class="product-price">{{ $data->product->price * $data->quantity }}</td>
-                        <td>{{ $data->product->discount }}%</td>
-                        <td>
-                            <a href="#" class="btn btn-danger remove_cart"
-                                data-cartid="{{ $data->id }}">Remove</a>
-                        </td>
-                    </tr>
-                @endforeach
+                @if ($cart)
+                    @foreach ($cart as $data)
+                        @php
+                            $total = 0;
+                            $itemtotal = $data->product->price * $data->quantity;
+                            $total += $itemtotal;
+                        @endphp
+                        <tr>
+                            <td>
+                                <img style="height: 50px;width:100px"
+                                    src="{{ asset('images/' . $data->product->image) }}" class="card-img-top"
+                                    alt="{{ $data->name }}">
+                                {{ $data->product->name }}
+                            </td>
+                            <td>
+                                <input type="number" class="form-control quantity-input"
+                                    data-price="{{ $data->product->price }}" data-id="{{ $data->id }}"
+                                    value="{{ $data->quantity }}" min="1">
+                            </td>
+                            <td class="product-price">{{ $data->product->price * $data->quantity }}</td>
+                            <td>{{ $data->product->discount }}%</td>
+                            <td>
+                                <a href="#" class="btn btn-danger remove_cart"
+                                    data-cartid="{{ $data->id }}">Remove</a>
+                            </td>
+                        </tr>
+                    @endforeach
+                @endif
             </tbody>
         </table>
     </div>
 
     <div style="padding-left: 827px">
-        <p> <strong>TOTAL: </strong> ₹<span id="total-price">{{ number_format($total, 2) }}</span> </p>
-        <p> <strong>SHIPPING: </strong> ₹100.00 </p>
-        <p> <strong>GRAND TOTAL: </strong> ₹<span id="grand-total">{{ number_format($total + 100, 2) }}</span> </p>
+        <p> <strong>TOTAL: </strong> ₹<span id="total-price">{{ isset($total) ? number_format($total, 2) : '0.00' }}</span> </p>
+        <p> <strong>SHIPPING: </strong> {{ isset($total) ? '₹100.00' : '₹0' }} </p>
+        <p> <strong>GRAND TOTAL: </strong> ₹<span id="grand-total"> {{ isset($total) ? number_format($total + 100, 2) : '0' }}</span> </p>
     </div>
 
     <!-- Place Order Form -->
@@ -103,7 +106,7 @@
             <div class="mb-3">
                 <label for="name" class="form-label">Full Name</label>
                 <input type="text" class="form-control" id="name" name="name">
-                <input type="hidden" name="productid" id="productprice" value="{{ $total + 100  }}">
+                <input type="hidden" name="productid" id="productprice" value="{{ isset($total) ? ($total + 100) : 100 }}">
             </div>
             <div class="mb-3">
                 <label for="address" class="form-label">Address</label>
@@ -111,7 +114,8 @@
             </div>
             <div class="mb-3">
                 <label for="mobile" class="form-label">Mobile</label>
-                <input type="text" class="form-control" id="mobile" maxlength="10" minlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '')" name="mobile">
+                <input type="text" class="form-control" id="mobile" maxlength="10" minlength="10"
+                    oninput="this.value = this.value.replace(/[^0-9]/g, '')" name="mobile">
             </div>
             <button type="submit" id="order_btn" class="btn btn-success">Place Order</button>
         </form>
@@ -119,8 +123,12 @@
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js" integrity="sha512-+k1pnlgt4F1H8L7t3z95o3/KO+o78INEcXTbnoJQ/F2VqDVhWoaiVml/OEHv9HsVgxUaVW+IbiZPUJQfF/YxZw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js"
+        integrity="sha512-+k1pnlgt4F1H8L7t3z95o3/KO+o78INEcXTbnoJQ/F2VqDVhWoaiVml/OEHv9HsVgxUaVW+IbiZPUJQfF/YxZw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"
         integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw=="
