@@ -55,7 +55,6 @@
                     <th>Product</th>
                     <th>Quantity</th>
                     <th>Price</th>
-                    <th>Discount</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -80,7 +79,6 @@
                                     value="{{ $data->quantity }}" min="1">
                             </td>
                             <td class="product-price">{{ $data->product->price * $data->quantity }}</td>
-                            <td>{{ $data->product->discount }}%</td>
                             <td>
                                 <a href="#" class="btn btn-danger remove_cart"
                                     data-cartid="{{ $data->id }}">Remove</a>
@@ -92,10 +90,23 @@
         </table>
     </div>
 
+    @php
+        $total = $total ?? 0;
+    @endphp
     <div style="padding-left: 827px">
-        <p> <strong>TOTAL: </strong> ₹<span id="total-price">{{ isset($total) ? number_format($total, 2) : '0.00' }}</span> </p>
-        <p> <strong>SHIPPING: </strong> {{ isset($total) ? '₹100.00' : '₹0' }} </p>
-        <p> <strong>GRAND TOTAL: </strong> ₹<span id="grand-total"> {{ isset($total) ? number_format($total + 100, 2) : '0' }}</span> </p>
+        <p> <strong>TOTAL: </strong> ₹<span
+                id="total-price">{{ isset($total) ? number_format($total, 2) : '0.00' }}</span> </p>
+        @if ($total > 0)
+            <p> <strong>SHIPPING: </strong> {{ isset($total) ? '₹100.00' : '₹0' }} </p>
+        @else
+            <p> <strong>SHIPPING: </strong> ₹0.00 </p>
+        @endif
+        @if ($total > 0)
+            <p> <strong>GRAND TOTAL: </strong> ₹<span id="grand-total">
+                    {{ isset($total) && $total > 0 ? number_format($total + 100, 2) : '0' }}</span> </p>
+        @else
+            <p> <strong>GRAND TOTAL: </strong> ₹0.00 </p>
+        @endif
     </div>
 
     <!-- Place Order Form -->
@@ -106,7 +117,8 @@
             <div class="mb-3">
                 <label for="name" class="form-label">Full Name</label>
                 <input type="text" class="form-control" id="name" name="name">
-                <input type="hidden" name="productid" id="productprice" value="{{ isset($total) ? ($total + 100) : 100 }}">
+                <input type="hidden" name="productid" id="productprice"
+                    value="{{ isset($total) ? $total + 100 : 100 }}">
             </div>
             <div class="mb-3">
                 <label for="address" class="form-label">Address</label>
